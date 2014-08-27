@@ -1,30 +1,38 @@
 class RedmineMerge
   def self.migrate
-    SourceUser.migrate
-    SourceCustomField.migrate
-    SourceTracker.migrate
-    SourceIssueStatus.migrate
-    SourceEnumeration.migrate_issue_priorities
-    SourceEnumeration.migrate_time_entry_activities
-    SourceEnumeration.migrate_document_categories
-    SourceRole.migrate
+    [
+      SourceUser,
+      SourceCustomField,
+      SourceTracker,
+      SourceIssueStatus,
+      SourceEnumeration,
+      SourceRole,
+    ].each do |model_class|
+      puts model_class
+      model_class.migrate
+    end
 
     # Project-specific data
-    SourceProject.migrate
-    SourceMember.migrate
-    SourceVersion.migrate
-    SourceNews.migrate
-    SourceIssueCategory.migrate
-    SourceIssue.migrate
-    SourceIssueRelation.migrate
-    SourceJournal.migrate
-    SourceJournalDetail.migrate
-    SourceTimeEntry.migrate
-    SourceDocument.migrate
-    SourceWiki.migrate
-    SourceWikiPage.migrate
-    SourceWikiContent.migrate
-    SourceAttachment.migrate
+     [
+       SourceProject,
+       SourceMember,
+       SourceVersion,
+       SourceNews,
+       SourceIssueCategory,
+       SourceIssue,
+       SourceIssueRelation,
+       SourceJournal,
+       SourceJournalDetail,
+       SourceTimeEntry,
+       SourceDocument,
+       SourceWiki,
+       SourceWikiPage,
+       SourceWikiContent,
+       SourceAttachment,
+     ].each do |model_class|
+       puts model_class
+       model_class.migrate
+     end
   end
 
   def self.reset_db
@@ -145,7 +153,7 @@ class RedmineMerge
         return target.id if target
         return nil
       end
-      
+
     end
 
     private

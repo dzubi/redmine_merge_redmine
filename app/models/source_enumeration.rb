@@ -3,6 +3,12 @@ class SourceEnumeration < ActiveRecord::Base
   self.table_name = "#{table_name_prefix}enumerations#{table_name_suffix}"
   self.inheritance_column = "type_inheritance" # prevent's active record single table inheritance error
 
+  def self.migrate
+    migrate_issue_priorities
+    migrate_time_entry_activities
+    migrate_document_categories
+  end
+
   def self.migrate_issue_priorities
     all(:conditions => {:type => "IssuePriority"}) .each do |source_issue_priority|
       next if IssuePriority.find_by_name(source_issue_priority.name)
