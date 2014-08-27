@@ -7,8 +7,10 @@ class SourceProject < ActiveRecord::Base
 
   def self.migrate
     all(:order => 'parent_id ASC').each do |source_project|
-      next if Project.find_by_name(source_project.name)
-      next if Project.find_by_identifier(source_project.identifier)
+      if project = (Project.find_by_name(source_project.name) || Project.find_by_identifier(source_project.identifier))
+        RedmineMerge::Mapper.add_project(source_project.id, project.id)
+        next
+      end
 
       project = Project.create!(source_project.attributes.except("lft","rgt","parent_id")) do |p|
         p.status = source_project.status
