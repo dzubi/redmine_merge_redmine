@@ -27,6 +27,23 @@ class RedmineMerge
     SourceAttachment.migrate
   end
 
+  def self.reset_db
+    db = ActiveRecord::Base.connection
+    db_name = Rails.configuration.database_configuration[Rails.env]["database"]
+
+    db.execute("DROP DATABASE #{db_name}")
+    db.execute("CREATE DATABASE #{db_name}")
+    db.execute("USE #{db_name}")
+
+    sql = File.read("/tmp/01-20140812_bugtracker.sql")
+    statements = sql.split(/;$/)
+    ActiveRecord::Base.transaction do
+      statements.each do |statement|
+        db.execute(statement)
+      end
+    end
+  end
+
   class Mapper
     Projects = {}
     Issues = {}
