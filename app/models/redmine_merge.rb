@@ -35,6 +35,15 @@ class RedmineMerge
      end
   end
 
+  def self.query
+    fail('cannot work with :source_redmine') if Rails.env == 'source_redmine'
+    [:source_redmine, Rails.env.to_sym].map do  |env|
+      ActiveRecord::Base.establish_connection(env)
+      yield
+    end.reverse
+  end
+
+
   def self.reset_db
     db = ActiveRecord::Base.connection
     db_name = Rails.configuration.database_configuration[Rails.env]["database"]
