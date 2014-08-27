@@ -4,4 +4,8 @@ class SourceMemberRole < ActiveRecord::Base
 
   belongs_to :member, :class_name => 'SourceMember', :foreign_key => 'member_id'
   belongs_to :role, :class_name => 'SourceRole', :foreign_key => 'role_id'
+
+  def inherited?
+    !inherited_from.nil?
+  end
 end
