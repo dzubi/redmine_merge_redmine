@@ -19,7 +19,7 @@ class SourceProject < ActiveRecord::Base
         if source_project.trackers
           source_project.trackers.each do |source_tracker|
             merged_tracker = Tracker.find_by_name(source_tracker.name)
-            p.trackers << merged_tracker if merged_tracker
+            p.trackers << merged_tracker if merged_tracker && p.trackers.exclude?(merged_tracker)
           end
         end
       end
